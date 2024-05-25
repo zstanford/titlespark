@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+	"titlespark-web/internal/util"
 	"unicode"
 )
 
@@ -91,7 +92,11 @@ type SearchResults struct {
 }
 
 func (s *OpenLibServiceOp) Query(language string, genre string, age string, subject string) (*QueryResponse, error) {
-	q := fmt.Sprintf("subject:%s subject:%s subject:%s language:%s", genre, age, subject, language)
+	sanitizedSubject := util.RemoveSpecialCharacters(subject)
+	if util.IsOnlySpaces(sanitizedSubject) || sanitizedSubject == "" {
+		sanitizedSubject = "general" // general subject will return more results instead of empty string
+	}
+	q := fmt.Sprintf("subject:%s subject:%s subject:%s language:%s", genre, age, sanitizedSubject, language)
 	encodedQ := url.QueryEscape(q)
 	fields := "isbn"
 	limit := "100"
@@ -102,9 +107,15 @@ func (s *OpenLibServiceOp) Query(language string, genre string, age string, subj
 		return nil, err
 	}
 	defer res.Body.Close()
-	data, _ := io.ReadAll(res.Body)
+	data, err := io.ReadAll(res.Body)
+	if err != nil {
+		fmt.Printf("error reading body: ", err)
+	}
 	var result QueryResponse
 	err = json.Unmarshal(data, &result)
+	if err != nil {
+		fmt.Printf("error marshalling: ", err)
+	}
 	return &result, err
 }
 
@@ -128,7 +139,7 @@ func (s *OpenLibServiceOp) GetBooks(booksISBN []BookISBN) ([]Book, error) {
 			bibKeyStr += fmt.Sprintf("ISBN:%s,", firstISBN)
 		}
 	}
-	queryUrl := fmt.Sprintf("/api/books?bibkey=%s&jscmd=data&format=json", bibKeyStr)
+	queryUrl := fmt.Sprintf("/api/books?bibkeys=%s&jscmd=data&format=json", bibKeyStr)
 	res, err := s.client.NewRequest(queryUrl)
 	if err != nil {
 		return nil, err

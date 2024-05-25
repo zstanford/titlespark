@@ -1,6 +1,9 @@
 package app
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type Preferences struct {
 	Language       string
@@ -18,11 +21,15 @@ func SuggestBook(pref Preferences) (BookSpark, error) {
 	openlibClient := NewOpenLibClient()
 	qResult, err := openlibClient.OpenLib.Query(pref.Language, pref.Genre, pref.TargetAudience, pref.Subject)
 	if err != nil {
-		return BookSpark{}, err
+		fmt.Printf("Error during query: ", err)
 	}
 	bResult, err := openlibClient.OpenLib.GetBooks(qResult.Docs)
 	if err != nil {
-		fmt.Printf("26:%s", err)
+		fmt.Printf("Error during get books: ", err)
+	}
+
+	if len(bResult) == 0 {
+		return BookSpark{}, errors.New("no book found")
 	}
 	book := BookSpark{
 		Title:  bResult[0].Title,

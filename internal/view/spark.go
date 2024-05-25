@@ -34,7 +34,10 @@ func sparkSuggestion(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Printf("Language: %s\nGenre: %s\nTarget Audience: %s\nSubject: %s\n",
 		pref.Language, pref.Genre, pref.TargetAudience, pref.Subject)
-	book, _ := app.SuggestBook(pref)
-
-	SparkResult(book).Render(r.Context(), w)
+	book, err := app.SuggestBook(pref)
+	if err != nil {
+		SparkResult(app.BookSpark{}, err).Render(r.Context(), w)
+	} else {
+		SparkResult(book, nil).Render(r.Context(), w)
+	}
 }
