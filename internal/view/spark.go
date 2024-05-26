@@ -1,7 +1,6 @@
 package view
 
 import (
-	"fmt"
 	"net/http"
 	"titlespark-web/internal/app"
 
@@ -36,16 +35,14 @@ func sparkSuggestion(w http.ResponseWriter, r *http.Request) {
 		TargetAudience: r.PostForm.Get("target-audience"),
 		Subject:        r.PostForm.Get("subject"),
 	}
-	fmt.Printf("Language: %s\nGenre: %s\nTarget Audience: %s\nSubject: %s\n",
-		pref.Language, pref.Genre, pref.TargetAudience, pref.Subject)
-	books, err := app.SuggestBook(pref)
+	suggestionResult, err := app.SuggestBook(pref)
 	if err != nil {
 		SparkResult([]app.BookSpark{}, nil, nil, err).Render(r.Context(), w)
 	} else {
-		for index, book := range books {
-			pieChartLabels = append(pieChartLabels, book.Title)
-			pieChartData = append(pieChartData, index+1)
+		for title, analysis := range suggestionResult.BookAnalysis {
+			pieChartLabels = append(pieChartLabels, title)
+			pieChartData = append(pieChartData, analysis.Count)
 		}
-		SparkResult(books, pieChartLabels, pieChartData, nil).Render(r.Context(), w)
+		SparkResult(suggestionResult.Books, pieChartLabels, pieChartData, nil).Render(r.Context(), w)
 	}
 }

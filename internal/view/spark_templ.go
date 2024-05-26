@@ -267,22 +267,22 @@ func SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []
 
 func loadPieChart(labels []string, data []int) templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_loadPieChart_d1dd`,
-		Function: `function __templ_loadPieChart_d1dd(labels, data){const ctx = document.getElementById('myChart');
+		Name: `__templ_loadPieChart_b102`,
+		Function: `function __templ_loadPieChart_b102(labels, data){const ctx = document.getElementById('myChart');
 
 new Chart(ctx, {
 type: 'pie',
 data: {
 labels: labels,
 datasets: [{
-label: '# of Votes',
+label: 'Number of first result:',
 data: data,
 }]
 },
 });
 
 }`,
-		Call:       templ.SafeScript(`__templ_loadPieChart_d1dd`, labels, data),
-		CallInline: templ.SafeScriptInline(`__templ_loadPieChart_d1dd`, labels, data),
+		Call:       templ.SafeScript(`__templ_loadPieChart_b102`, labels, data),
+		CallInline: templ.SafeScriptInline(`__templ_loadPieChart_b102`, labels, data),
 	}
 }
