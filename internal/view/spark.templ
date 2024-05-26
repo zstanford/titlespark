@@ -92,10 +92,18 @@ templ SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData [
 						<h4>Based on your selections, you should read:</h4>
 						<h3 class="text-3xl font-bold">{ books[0].Title }</h3>
 						<p class="py-2">by { books[0].Author }</p>
+						<h4 class="py-4 font-bold">Breakdown of first result distribution:</h4>
 						<div>
 							<canvas id="myChart"></canvas>
 						</div>
 					}
+				</div>
+				<div class="stats mt-10 self-start shadow">
+					<div class="stat">
+						<div class="stat-title">Preference Match</div>
+						<div class="stat-value">28%</div>
+						<div class="stat-desc">of your preferences matched this book</div>
+					</div>
 				</div>
 				<div>
 					<table class="table">
@@ -132,10 +140,18 @@ type: 'pie',
 data: {
 labels: labels,
 datasets: [{
-label: 'Number of first result:',
+label: 'Number of first result',
 data: data,
+hoverOffset: 4,
 }]
 },
+options: {
+plugins: {
+legend: {
+display: false
+}
+}
+}
 });
 
 }

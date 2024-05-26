@@ -3,6 +3,7 @@ package app
 import (
 	"errors"
 	"fmt"
+	"sort"
 )
 
 type Preferences struct {
@@ -61,7 +62,17 @@ func SuggestBook(pref Preferences) (SuggestionResult, error) {
 			}
 		}
 	}
-	for _, analysis := range bookAnalysis {
+
+	bookAnalysisSlice := make([]*BookAnalysis, 0, len(bookAnalysis))
+	for _, ba := range bookAnalysis {
+		bookAnalysisSlice = append(bookAnalysisSlice, ba)
+	}
+
+	sort.Slice(bookAnalysisSlice, func(i, j int) bool {
+		return bookAnalysisSlice[i].Count > bookAnalysisSlice[j].Count
+	})
+
+	for _, analysis := range bookAnalysisSlice {
 		book := BookSpark{
 			Title:  analysis.Book.Title,
 			Author: analysis.Book.Authors[0].Name,

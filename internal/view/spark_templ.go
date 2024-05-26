@@ -191,12 +191,12 @@ func SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</p><div><canvas id=\"myChart\"></canvas></div>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</p><h4 class=\"py-4 font-bold\">Breakdown of first result distribution:</h4><div><canvas id=\"myChart\"></canvas></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><div><table class=\"table\"><!-- head --><thead><tr><th></th><th>Title</th><th>Author</th></tr></thead> <tbody><!-- row 1 -->")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><div class=\"stats mt-10 self-start shadow\"><div class=\"stat\"><div class=\"stat-title\">Preference Match</div><div class=\"stat-value\">28%</div><div class=\"stat-desc\">of your preferences matched this book</div></div></div><div><table class=\"table\"><!-- head --><thead><tr><th></th><th>Title</th><th>Author</th></tr></thead> <tbody><!-- row 1 -->")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -208,7 +208,7 @@ func SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []
 				var templ_7745c5c3_Var12 string
 				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(index + 1))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 114, Col: 36}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 122, Col: 36}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 				if templ_7745c5c3_Err != nil {
@@ -221,7 +221,7 @@ func SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []
 				var templ_7745c5c3_Var13 string
 				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(book.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 115, Col: 25}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 123, Col: 25}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 				if templ_7745c5c3_Err != nil {
@@ -234,7 +234,7 @@ func SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []
 				var templ_7745c5c3_Var14 string
 				templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(book.Author)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 116, Col: 26}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 124, Col: 26}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 				if templ_7745c5c3_Err != nil {
@@ -267,22 +267,30 @@ func SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []
 
 func loadPieChart(labels []string, data []int) templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_loadPieChart_b102`,
-		Function: `function __templ_loadPieChart_b102(labels, data){const ctx = document.getElementById('myChart');
+		Name: `__templ_loadPieChart_2125`,
+		Function: `function __templ_loadPieChart_2125(labels, data){const ctx = document.getElementById('myChart');
 
 new Chart(ctx, {
 type: 'pie',
 data: {
 labels: labels,
 datasets: [{
-label: 'Number of first result:',
+label: 'Number of first result',
 data: data,
+hoverOffset: 4,
 }]
 },
+options: {
+plugins: {
+legend: {
+display: false
+}
+}
+}
 });
 
 }`,
-		Call:       templ.SafeScript(`__templ_loadPieChart_b102`, labels, data),
-		CallInline: templ.SafeScriptInline(`__templ_loadPieChart_b102`, labels, data),
+		Call:       templ.SafeScript(`__templ_loadPieChart_2125`, labels, data),
+		CallInline: templ.SafeScriptInline(`__templ_loadPieChart_2125`, labels, data),
 	}
 }
