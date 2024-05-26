@@ -17,7 +17,8 @@ type BookSpark struct {
 	Author string
 }
 
-func SuggestBook(pref Preferences) (BookSpark, error) {
+func SuggestBook(pref Preferences) ([]BookSpark, error) {
+	var books []BookSpark
 	openlibClient := NewOpenLibClient()
 	qResult, err := openlibClient.OpenLib.Query(pref.Language, pref.Genre, pref.TargetAudience, pref.Subject)
 	if err != nil {
@@ -29,12 +30,15 @@ func SuggestBook(pref Preferences) (BookSpark, error) {
 	}
 
 	if len(bResult) == 0 {
-		return BookSpark{}, errors.New("no book found")
+		return []BookSpark{}, errors.New("no books found")
 	}
-	book := BookSpark{
-		Title:  bResult[0].Title,
-		Author: bResult[0].Authors[0].Name,
+	fmt.Printf("Book Result length: %v\n", len(bResult))
+	for _, result := range bResult {
+		book := BookSpark{
+			Title:  result.Title,
+			Author: result.Authors[0].Name,
+		}
+		books = append(books, book)
 	}
-	fmt.Printf("Title: %s Author: %s", book.Title, book.Author)
-	return book, err
+	return books, err
 }

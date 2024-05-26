@@ -40,7 +40,7 @@ func (c *OpenLibClient) NewRequest(path string) (*http.Response, error) {
 	}
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Accept", "application/json")
-	fmt.Printf("Req: %v", req)
+	// fmt.Printf("Req: %v", req)
 	res, err := c.Client.Do(req)
 	if err != nil {
 		fmt.Println(err)
@@ -96,10 +96,10 @@ func (s *OpenLibServiceOp) Query(language string, genre string, age string, subj
 	if util.IsOnlySpaces(sanitizedSubject) || sanitizedSubject == "" {
 		sanitizedSubject = "general" // general subject will return more results instead of empty string
 	}
-	q := fmt.Sprintf("subject:%s subject:%s subject:%s language:%s", genre, age, sanitizedSubject, language)
+	q := fmt.Sprintf("subject:%s subject:%s language:%s", genre, sanitizedSubject, language)
 	encodedQ := url.QueryEscape(q)
 	fields := "isbn"
-	limit := "100"
+	limit := "10"
 	queryUrl := fmt.Sprintf("/search.json?q=%s&fields=%s&limit=%s", encodedQ, fields, limit)
 	res, err := s.client.NewRequest(queryUrl)
 	fmt.Printf("res:%v", res)
@@ -119,7 +119,6 @@ func (s *OpenLibServiceOp) Query(language string, genre string, age string, subj
 	return &result, err
 }
 
-// TODO: still getting error
 func (s *OpenLibServiceOp) GetBooks(booksISBN []BookISBN) ([]Book, error) {
 	var (
 		books     []Book
@@ -127,15 +126,12 @@ func (s *OpenLibServiceOp) GetBooks(booksISBN []BookISBN) ([]Book, error) {
 	)
 
 	if len(booksISBN) == 0 {
-		return nil, nil
+		return nil, fmt.Errorf("no ISBNs")
 	}
 
 	for _, book := range booksISBN {
-		for _, isbn := range book.ISBN {
-			firstISBN := extractFirstSetOfNumbers(isbn)
-			if firstISBN == "" {
-				continue
-			}
+		if len(book.ISBN) > 0 {
+			firstISBN := book.ISBN[0]
 			bibKeyStr += fmt.Sprintf("ISBN:%s,", firstISBN)
 		}
 	}

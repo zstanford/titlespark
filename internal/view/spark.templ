@@ -2,6 +2,7 @@ package view
 
 import "titlespark-web/internal/app"
 import "fmt"
+import "strconv"
 
 templ Spark() {
 	@Layout("TitleSpark") {
@@ -79,13 +80,62 @@ templ SparkForm() {
 	</div>
 }
 
-templ SparkResult(book app.BookSpark, err error) {
-	<div>
-		if err != nil {
-			<p>{ fmt.Sprintf("Error: %s", err) }</p>
-		} else {
-			<p>{ book.Title }</p>
-			<p>{ book.Author }</p>
-		}
-	</div>
+templ SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []int, err error) {
+	@Layout("Spark Results") {
+		<div onmousemove={ loadPieChart(pieChartLabels, pieChartData) } class="hero bg-base-200 min-h-screen">
+			<div class="hero-content flex-col lg:flex-row">
+				<div>
+					<a href={ templ.URL("/") } class="btn btn-primary">Start Over</a>
+					if err != nil {
+						<p>{ fmt.Sprintf("Error: %s", err) }</p>
+					} else {
+						<h4>Based on your selections, you should read:</h4>
+						<h3 class="text-3xl font-bold">{ books[0].Title }</h3>
+						<p class="py-2">by { books[0].Author }</p>
+						<div>
+							<canvas id="myChart"></canvas>
+						</div>
+					}
+				</div>
+				<div>
+					<table class="table">
+						<!-- head -->
+						<thead>
+							<tr>
+								<th></th>
+								<th>Title</th>
+								<th>Author</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- row 1 -->
+							for index, book := range books {
+								<tr class="bg-base-200">
+									<th>{ strconv.Itoa(index+1) }</th>
+									<td>{ book.Title }</td>
+									<td>{ book.Author }</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+script loadPieChart(labels []string, data []int) {
+const ctx = document.getElementById('myChart');
+
+new Chart(ctx, {
+type: 'pie',
+data: {
+labels: labels,
+datasets: [{
+label: '# of Votes',
+data: data,
+}]
+},
+});
+
 }
