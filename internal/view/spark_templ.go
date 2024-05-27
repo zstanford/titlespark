@@ -90,7 +90,7 @@ func SparkForm() templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex min-h-screen flex-row items-center justify-center\"><div class=\"card w-96 shadow-xl\"><div class=\"card-body\"><h2 class=\"card-title\">TitleSpark</h2><form id=\"sparkForm\" hx-target=\"#spark-content\" action=\"/spark\" method=\"post\"><div><label>Language</label> <select id=\"language\" name=\"language\" class=\"select select-bordered w-full max-w-xs\"><option disabled selected>Select Language</option> <option value=\"eng\">English</option> <option value=\"spa\">Spanish</option> <option value=\"fre\">French</option> <option value=\"deu\">German</option> <option value=\"zho\">Chinese</option> <option value=\"jpn\">Japanese</option></select> <label>Genre</label> <select id=\"genre\" name=\"genre\" class=\"select select-bordered w-full max-w-xs\"><option disabled selected>Select Genre</option> <option value=\"fantasy\">Fiction</option> <option value=\"nonfiction\">Non-fiction</option> <option value=\"fantasy\">Fantasy</option> <option value=\"mystery\">Mystery</option> <option value=\"romance\">Romance</option> <option value=\"science fiction\">Sci-Fi</option> <option value=\"horror\">Horror</option> <option value=\"classics\">Classics</option> <option value=\"comedy\">Comedy</option></select> <label>Target Audience</label> <select id=\"target-audience\" name=\"target-audience\" class=\"select select-bordered w-full max-w-xs\"><option disabled selected>Select Target Audience</option> <option value=\"adult\">Adult</option> <option value=\"young adult\">Young Adult</option> <option value=\"youth\">Youth</option> <option value=\"children\">Children</option></select> <label>Topic or Subject</label> <input type=\"text\" name=\"subject\" id=\"subject\" placeholder=\"e.g. dogs and cats...\" class=\"input input-bordered w-full max-w-xs\"></div><div class=\"card-actions justify-center\"><button class=\"btn btn-primary my-2\">Get Suggestion</button></div></form></div></div></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex min-h-screen flex-row items-center justify-center\"><div class=\"card w-96 shadow-xl\"><div class=\"card-body\"><h2 class=\"card-title\">TitleSpark</h2><form id=\"sparkForm\" hx-target=\"#spark-content\" action=\"/spark\" method=\"post\"><div><label>Language</label> <select id=\"language\" name=\"language\" class=\"select select-bordered w-full max-w-xs\"><option disabled selected>Select Language</option> <option value=\"eng\">English</option> <option value=\"spa\">Spanish</option> <option value=\"fre\">French</option> <option value=\"deu\">German</option> <option value=\"zho\">Chinese</option> <option value=\"jpn\">Japanese</option></select> <label>Genre</label> <select id=\"genre\" name=\"genre\" class=\"select select-bordered w-full max-w-xs\"><option disabled selected>Select Genre</option> <option value=\"fiction\">Fiction</option> <option value=\"nonfiction\">Non-fiction</option> <option value=\"fantasy\">Fantasy</option> <option value=\"mystery\">Mystery</option> <option value=\"romance\">Romance</option> <option value=\"science fiction\">Sci-Fi</option> <option value=\"horror\">Horror</option> <option value=\"classics\">Classics</option> <option value=\"comedy\">Comedy</option></select> <label>Target Audience</label> <select id=\"target-audience\" name=\"target-audience\" class=\"select select-bordered w-full max-w-xs\"><option disabled selected>Select Target Audience</option> <option value=\"adult\">Adult</option> <option value=\"young adult\">Young Adult</option> <option value=\"juvenile\">Youth</option> <option value=\"children\">Children</option></select> <label>Topic or Subject</label> <input type=\"text\" name=\"subject\" id=\"subject\" placeholder=\"e.g. dogs and cats...\" class=\"input input-bordered w-full max-w-xs\"></div><div class=\"card-actions justify-center\"><button class=\"btn btn-primary my-2\">Get Suggestion</button></div></form></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -224,7 +224,7 @@ func SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"stat-desc\">of your preferences matched this book</div></div></div><div><table class=\"table\"><!-- head --><thead><tr><th></th><th>Title</th><th>Author</th></tr></thead> <tbody><!-- row 1 -->")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"stat-desc\">of your preferences matched this title</div></div></div><div><table class=\"table\"><!-- head --><thead><tr><th></th><th>Title</th><th>Author</th></tr></thead> <tbody><!-- row 1 -->")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -295,8 +295,8 @@ func SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []
 
 func loadPieChart(labels []string, data []int) templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_loadPieChart_2125`,
-		Function: `function __templ_loadPieChart_2125(labels, data){const ctx = document.getElementById('myChart');
+		Name: `__templ_loadPieChart_ca8b`,
+		Function: `function __templ_loadPieChart_ca8b(labels, data){const ctx = document.getElementById('myChart');
 
 new Chart(ctx, {
 type: 'pie',
@@ -305,20 +305,32 @@ labels: labels,
 datasets: [{
 label: 'Number of first result',
 data: data,
+backgroundColor: [
+'rgb(255, 99, 132)',
+'rgb(54, 162, 235)',
+'rgb(255, 205, 86)',
+'rgb(75, 192, 192)',
+'rgb(153, 102, 255)',
+'rgb(255, 159, 64)',
+'rgb(201, 203, 207)',
+'rgb(144, 238, 144)',
+'rgb(255, 69, 0)',
+'rgb(127, 255, 212)'
+],
 hoverOffset: 4,
 }]
 },
 options: {
 plugins: {
 legend: {
-display: false
+display: true
 }
 }
 }
 });
 
 }`,
-		Call:       templ.SafeScript(`__templ_loadPieChart_2125`, labels, data),
-		CallInline: templ.SafeScriptInline(`__templ_loadPieChart_2125`, labels, data),
+		Call:       templ.SafeScript(`__templ_loadPieChart_ca8b`, labels, data),
+		CallInline: templ.SafeScriptInline(`__templ_loadPieChart_ca8b`, labels, data),
 	}
 }

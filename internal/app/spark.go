@@ -3,6 +3,7 @@ package app
 import (
 	"errors"
 	"fmt"
+	"math"
 	"sort"
 	"strings"
 )
@@ -53,30 +54,16 @@ func SuggestBook(pref Preferences) (SuggestionResult, error) {
 		analysis := &BookAnalysis{Book: book, Count: 0}
 		prefMatchCount := 0
 		for _, subject := range book.Subjects {
-			fmt.Printf("%s : %s\n", strings.ToLower(getLanguageName(pref.Language)), strings.ToLower(subject))
-			if strings.Contains(strings.ToLower(getLanguageName(pref.Language)), strings.ToLower(subject)) {
+			if strings.Contains(strings.ToLower(subject), strings.ToLower(getLanguageName(pref.Language))) ||
+				strings.Contains(strings.ToLower(subject), strings.ToLower(pref.Genre)) ||
+				strings.Contains(strings.ToLower(subject), strings.ToLower(pref.Subject)) ||
+				strings.Contains(strings.ToLower(subject), strings.ToLower(pref.TargetAudience)) {
 				prefMatchCount++
 			}
-			fmt.Printf("%s : %s\n", strings.ToLower(pref.Genre), strings.ToLower(subject))
-			if strings.Contains(strings.ToLower(pref.Genre), strings.ToLower(subject)) {
-				prefMatchCount++
-			}
-			fmt.Printf("%s : %s\n", strings.ToLower(pref.Subject), strings.ToLower(subject))
-			if strings.Contains(strings.ToLower(pref.Subject), strings.ToLower(subject)) {
-				prefMatchCount++
-			}
-			fmt.Printf("%s : %s\n", strings.ToLower(book.Title), strings.ToLower(subject))
-			if strings.Contains(strings.ToLower(book.Title), strings.ToLower(subject)) {
-				prefMatchCount++
-			}
-			fmt.Printf("%s : %s\n", strings.ToLower(book.Author), strings.ToLower(subject))
-			if strings.Contains(strings.ToLower(book.Author), strings.ToLower(subject)) {
-				prefMatchCount++
-			}
-			fmt.Println("prefMatchCount:", prefMatchCount)
 		}
 		if len(book.Subjects) > 0 {
-			fmt.Printf("\n Preference Match Percentage: %v", analysis.PreferenceMatchPercentage)
+			percentage := (float64(prefMatchCount) / float64(len(book.Subjects))) * 100
+			analysis.PreferenceMatchPercentage = int(math.Ceil(percentage))
 		}
 		bookAnalysis[book.Title] = analysis
 	}
@@ -91,6 +78,7 @@ func SuggestBook(pref Preferences) (SuggestionResult, error) {
 			fmt.Println("No books found or error fetching data: ", err)
 			continue
 		}
+
 		for _, ba := range bookAnalysis {
 			if ba.Book.Title == newBooks[0].Title {
 				ba.Count++

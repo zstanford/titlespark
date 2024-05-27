@@ -124,9 +124,11 @@ func (s *OpenLibServiceOp) GetBooks(bookDocs []BookDocs) ([]Book, error) {
 		return nil, fmt.Errorf("no ISBNs")
 	}
 
+	isbnToSubjects := make(map[string][]string)
 	for _, book := range bookDocs {
 		if len(book.ISBN) > 0 {
 			firstISBN := book.ISBN[0]
+			isbnToSubjects[firstISBN] = book.Subjects
 			bibKeyStr += fmt.Sprintf("ISBN:%s,", firstISBN)
 		}
 	}
@@ -146,12 +148,16 @@ func (s *OpenLibServiceOp) GetBooks(bookDocs []BookDocs) ([]Book, error) {
 	if err != nil {
 		return []Book{}, err
 	}
-	bookMapIndex := 0
-	for _, book := range bookMap {
+	for bibKey, book := range bookMap {
+		isbn := strings.TrimPrefix(bibKey, "ISBN:")
+		subjects, exists := isbnToSubjects[isbn]
+		if !exists {
+			return []Book{}, fmt.Errorf("subjects not found for ISBN: %s", isbn)
+		}
 		b := Book{
 			Title:    book.Title,
 			Author:   book.Authors[0].Name,
-			Subjects: bookDocs[bookMapIndex].Subjects,
+			Subjects: subjects,
 		}
 		books = append(books, b)
 	}

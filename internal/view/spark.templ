@@ -44,7 +44,7 @@ templ SparkForm() {
           <label>Genre</label>
           <select id="genre" name="genre" class="select select-bordered w-full max-w-xs">
             <option disabled selected>Select Genre</option>
-            <option value="fantasy">Fiction</option>
+            <option value="fiction">Fiction</option>
             <option value="nonfiction">Non-fiction</option>
             <option value="fantasy">Fantasy</option>
             <option value="mystery">Mystery</option>
@@ -59,7 +59,7 @@ templ SparkForm() {
             <option disabled selected>Select Target Audience</option>
             <option value="adult">Adult</option>
             <option value="young adult">Young Adult</option>
-            <option value="youth">Youth</option>
+            <option value="juvenile">Youth</option>
             <option value="children">Children</option>
           </select>
           <label>Topic or Subject</label>
@@ -102,7 +102,7 @@ templ SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData [
         } else {
         <div class="stat-value">{ fmt.Sprintf("%v%%", books[0].PreferenceMatchPercentage) }</div>
         }
-        <div class="stat-desc">of your preferences matched this book</div>
+        <div class="stat-desc">of your preferences matched this title</div>
       </div>
     </div>
     <div>
@@ -142,13 +142,25 @@ labels: labels,
 datasets: [{
 label: 'Number of first result',
 data: data,
+backgroundColor: [
+'rgb(255, 99, 132)',
+'rgb(54, 162, 235)',
+'rgb(255, 205, 86)',
+'rgb(75, 192, 192)',
+'rgb(153, 102, 255)',
+'rgb(255, 159, 64)',
+'rgb(201, 203, 207)',
+'rgb(144, 238, 144)',
+'rgb(255, 69, 0)',
+'rgb(127, 255, 212)'
+],
 hoverOffset: 4,
 }]
 },
 options: {
 plugins: {
 legend: {
-display: false
+display: true
 }
 }
 }
