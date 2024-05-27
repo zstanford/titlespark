@@ -6,9 +6,9 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 	"titlespark-web/internal/util"
-	"unicode"
 )
 
 const openlibUrl = "https://openlibrary.org"
@@ -40,10 +40,8 @@ func (c *OpenLibClient) NewRequest(path string) (*http.Response, error) {
 	}
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Accept", "application/json")
-	// fmt.Printf("Req: %v", req)
 	res, err := c.Client.Do(req)
 	if err != nil {
-		fmt.Println(err)
 		return res, err
 	}
 	return res, err
@@ -53,16 +51,22 @@ type QueryResponse struct {
 	NumFound      int        `json:"numFound"`
 	Start         int        `json:"start"`
 	NumFoundExact bool       `json:"numFoundExact"`
-	Docs          []BookISBN `json:"docs"`
+	Docs          []BookDocs `json:"docs"`
 }
 
-type BookISBN struct {
-	ISBN []string `json:"isbn"`
+type GetBookResponse struct {
+	Title   string   `json:"title"`
+	Authors []Author `json:"authors"`
+}
+
+type BookDocs struct {
+	ISBN     []string `json:"isbn"`
+	Subjects []string `json:"subject"`
 }
 
 type OpenLibService interface {
-	Query(string, string, string, string) (*QueryResponse, error)
-	GetBooks([]BookISBN) ([]Book, error)
+	Query(string, string, string, string, int) (*QueryResponse, error)
+	GetBooks([]BookDocs) ([]Book, error)
 }
 
 type OpenLibServiceOp struct {
@@ -70,11 +74,9 @@ type OpenLibServiceOp struct {
 }
 
 type Book struct {
-	Title       string    `json:"title"`
-	Authors     []Author  `json:"authors"`
-	Subjects    []Subject `json:"subjects"`
-	PublishDate string    `json:"publish_date"`
-	Pages       int       `json:"number_of_pages"`
+	Title    string
+	Author   string
+	Subjects []string
 }
 
 type Author struct {
@@ -82,29 +84,22 @@ type Author struct {
 	Url  string `json:url`
 }
 
-type Subject struct {
-	Name string `json:"name"`
-	Url  string `json:url`
-}
-
-type SearchResults struct {
-	ISBN []string `json:"isbn"`
-}
-
-func (s *OpenLibServiceOp) Query(language string, genre string, age string, subject string) (*QueryResponse, error) {
+func (s *OpenLibServiceOp) Query(language string, genre string, age string, subject string, limit int) (*QueryResponse, error) {
 	sanitizedSubject := util.RemoveSpecialCharacters(subject)
 	if util.IsOnlySpaces(sanitizedSubject) || sanitizedSubject == "" {
 		sanitizedSubject = "general" // general subject will return more results instead of empty string
 	}
 	q := fmt.Sprintf("subject:%s subject:%s language:%s", genre, sanitizedSubject, language)
 	encodedQ := url.QueryEscape(q)
-	fields := "isbn"
-	limit := "10"
-	queryUrl := fmt.Sprintf("/search.json?q=%s&fields=%s&limit=%s", encodedQ, fields, limit)
+	fields := "isbn,subject"
+	queryUrl := fmt.Sprintf("/search.json?q=%s&fields=%s&limit=%v", encodedQ, fields, limit)
 	res, err := s.client.NewRequest(queryUrl)
-	fmt.Printf("res:%v", res)
 	if err != nil {
 		return nil, err
+	}
+	resContentType := res.Header.Get("Content-Type")
+	if strings.Contains(resContentType, "text/html") {
+		return &QueryResponse{}, err
 	}
 	defer res.Body.Close()
 	data, err := io.ReadAll(res.Body)
@@ -119,17 +114,17 @@ func (s *OpenLibServiceOp) Query(language string, genre string, age string, subj
 	return &result, err
 }
 
-func (s *OpenLibServiceOp) GetBooks(booksISBN []BookISBN) ([]Book, error) {
+func (s *OpenLibServiceOp) GetBooks(bookDocs []BookDocs) ([]Book, error) {
 	var (
 		books     []Book
 		bibKeyStr string
 	)
 
-	if len(booksISBN) == 0 {
+	if len(bookDocs) == 0 {
 		return nil, fmt.Errorf("no ISBNs")
 	}
 
-	for _, book := range booksISBN {
+	for _, book := range bookDocs {
 		if len(book.ISBN) > 0 {
 			firstISBN := book.ISBN[0]
 			bibKeyStr += fmt.Sprintf("ISBN:%s,", firstISBN)
@@ -138,29 +133,27 @@ func (s *OpenLibServiceOp) GetBooks(booksISBN []BookISBN) ([]Book, error) {
 	queryUrl := fmt.Sprintf("/api/books?bibkeys=%s&jscmd=data&format=json", bibKeyStr)
 	res, err := s.client.NewRequest(queryUrl)
 	if err != nil {
-		return nil, err
+		return []Book{}, err
+	}
+	resContentType := res.Header.Get("Content-Type")
+	if strings.Contains(resContentType, "text/html") {
+		return []Book{}, err
 	}
 	defer res.Body.Close()
 	data, _ := io.ReadAll(res.Body)
-	bookMap := make(map[string]Book)
+	bookMap := make(map[string]GetBookResponse)
 	err = json.Unmarshal([]byte(data), &bookMap)
 	if err != nil {
-		return nil, err
+		return []Book{}, err
 	}
+	bookMapIndex := 0
 	for _, book := range bookMap {
-		books = append(books, book)
+		b := Book{
+			Title:    book.Title,
+			Author:   book.Authors[0].Name,
+			Subjects: bookDocs[bookMapIndex].Subjects,
+		}
+		books = append(books, b)
 	}
 	return books, nil
-}
-
-func extractFirstSetOfNumbers(s string) string {
-	var numbers []rune
-	for _, r := range s {
-		if unicode.IsDigit(r) {
-			numbers = append(numbers, r)
-		} else if len(numbers) > 0 {
-			break
-		}
-	}
-	return string(numbers)
 }

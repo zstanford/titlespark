@@ -5,131 +5,131 @@ import "fmt"
 import "strconv"
 
 templ Spark() {
-	@Layout("TitleSpark") {
-		@SparkContent()
-	}
+@Layout("TitleSpark") {
+@SparkContent()
+}
 }
 
 templ SparkContent() {
-	<div class="hero bg-base-200 min-h-screen">
-		<div class="hero-content text-center">
-			<div class="max-w-md">
-				<div id="spark-content">
-					<h1 class="text-5xl font-bold">TitleSpark</h1>
-					<p class="py-6">Spark a book suggestion by entering some of your preferences.</p>
-					<button hx-get="/spark" hx-target="#spark-content" class="btn btn-primary">Get Started</button>
-				</div>
-			</div>
-		</div>
-	</div>
+<div class="hero bg-base-200 min-h-screen">
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <div id="spark-content">
+        <h1 class="text-5xl font-bold">TitleSpark</h1>
+        <p class="py-6">Spark a book suggestion by entering some of your preferences.</p>
+        <button hx-get="/spark" hx-target="#spark-content" class="btn btn-primary">Get Started</button>
+      </div>
+    </div>
+  </div>
+</div>
 }
 
 templ SparkForm() {
-	<div class="flex min-h-screen flex-row items-center justify-center">
-		<div class="card w-96 shadow-xl">
-			<div class="card-body">
-				<h2 class="card-title">TitleSpark</h2>
-				<form id="sparkForm" hx-target="#spark-content" action="/spark" method="post">
-					<div>
-						<label>Language</label>
-						<select id="language" name="language" class="select select-bordered w-full max-w-xs">
-							<option disabled selected>Select Language</option>
-							<option value="eng">English</option>
-							<option value="spa">Spanish</option>
-							<option value="fre">French</option>
-							<option value="deu">German</option>
-							<option value="zho">Chinese</option>
-							<option value="jpn">Japanese</option>
-						</select>
-						<label>Genre</label>
-						<select id="genre" name="genre" class="select select-bordered w-full max-w-xs">
-							<option disabled selected>Select Genre</option>
-							<option value="fantasy">Fiction</option>
-							<option value="nonfiction">Non-fiction</option>
-							<option value="fantasy">Fantasy</option>
-							<option value="mystery">Mystery</option>
-							<option value="romance">Romance</option>
-							<option value="science fiction">Sci-Fi</option>
-							<option value="horror">Horror</option>
-							<option value="classics">Classics</option>
-							<option value="comedy">Comedy</option>
-						</select>
-						<label>Target Audience</label>
-						<select id="target-audience" name="target-audience" class="select select-bordered w-full max-w-xs">
-							<option disabled selected>Select Target Audience</option>
-							<option value="adult">Adult</option>
-							<option value="young adult">Young Adult</option>
-							<option value="youth">Youth</option>
-							<option value="children">Children</option>
-						</select>
-						<label>Topic or Subject</label>
-						<input
-							type="text"
-							name="subject"
-							id="subject"
-							placeholder="e.g. dogs and cats..."
-							class="input input-bordered w-full max-w-xs"
-						/>
-					</div>
-					<div class="card-actions justify-center">
-						<button class="btn btn-primary my-2">Get Suggestion</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+<div class="flex min-h-screen flex-row items-center justify-center">
+  <div class="card w-96 shadow-xl">
+    <div class="card-body">
+      <h2 class="card-title">TitleSpark</h2>
+      <form id="sparkForm" hx-target="#spark-content" action="/spark" method="post">
+        <div>
+          <label>Language</label>
+          <select id="language" name="language" class="select select-bordered w-full max-w-xs">
+            <option disabled selected>Select Language</option>
+            <option value="eng">English</option>
+            <option value="spa">Spanish</option>
+            <option value="fre">French</option>
+            <option value="deu">German</option>
+            <option value="zho">Chinese</option>
+            <option value="jpn">Japanese</option>
+          </select>
+          <label>Genre</label>
+          <select id="genre" name="genre" class="select select-bordered w-full max-w-xs">
+            <option disabled selected>Select Genre</option>
+            <option value="fantasy">Fiction</option>
+            <option value="nonfiction">Non-fiction</option>
+            <option value="fantasy">Fantasy</option>
+            <option value="mystery">Mystery</option>
+            <option value="romance">Romance</option>
+            <option value="science fiction">Sci-Fi</option>
+            <option value="horror">Horror</option>
+            <option value="classics">Classics</option>
+            <option value="comedy">Comedy</option>
+          </select>
+          <label>Target Audience</label>
+          <select id="target-audience" name="target-audience" class="select select-bordered w-full max-w-xs">
+            <option disabled selected>Select Target Audience</option>
+            <option value="adult">Adult</option>
+            <option value="young adult">Young Adult</option>
+            <option value="youth">Youth</option>
+            <option value="children">Children</option>
+          </select>
+          <label>Topic or Subject</label>
+          <input type="text" name="subject" id="subject" placeholder="e.g. dogs and cats..."
+            class="input input-bordered w-full max-w-xs" />
+        </div>
+        <div class="card-actions justify-center">
+          <button class="btn btn-primary my-2">Get Suggestion</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 }
 
 templ SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []int, err error) {
-	@Layout("Spark Results") {
-		<div onmousemove={ loadPieChart(pieChartLabels, pieChartData) } class="hero bg-base-200 min-h-screen">
-			<div class="hero-content flex-col lg:flex-row">
-				<div>
-					<a href={ templ.URL("/") } class="btn btn-primary">Start Over</a>
-					if err != nil {
-						<p>{ fmt.Sprintf("Error: %s", err) }</p>
-					} else {
-						<h4>Based on your selections, you should read:</h4>
-						<h3 class="text-3xl font-bold">{ books[0].Title }</h3>
-						<p class="py-2">by { books[0].Author }</p>
-						<h4 class="py-4 font-bold">Breakdown of first result distribution:</h4>
-						<div>
-							<canvas id="myChart"></canvas>
-						</div>
-					}
-				</div>
-				<div class="stats mt-10 self-start shadow">
-					<div class="stat">
-						<div class="stat-title">Preference Match</div>
-						<div class="stat-value">28%</div>
-						<div class="stat-desc">of your preferences matched this book</div>
-					</div>
-				</div>
-				<div>
-					<table class="table">
-						<!-- head -->
-						<thead>
-							<tr>
-								<th></th>
-								<th>Title</th>
-								<th>Author</th>
-							</tr>
-						</thead>
-						<tbody>
-							<!-- row 1 -->
-							for index, book := range books {
-								<tr class="bg-base-200">
-									<th>{ strconv.Itoa(index+1) }</th>
-									<td>{ book.Title }</td>
-									<td>{ book.Author }</td>
-								</tr>
-							}
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-	}
+@Layout("Spark Results") {
+<div onmousemove={ loadPieChart(pieChartLabels, pieChartData) } class="hero bg-base-200 min-h-screen">
+  <div class="hero-content flex-col lg:flex-row">
+    <div>
+      <a href={ templ.URL("/") } class="btn btn-primary">Start Over</a>
+      if err != nil {
+      <p>{ fmt.Sprintf("Error: %s", err) }</p>
+      <a href="https://openlibrary.org/status" target="_" class="text-2l font-bold">Check data server status here</a>
+      } else {
+      <h4>Based on your selections, you should read:</h4>
+      <h3 class="text-3xl font-bold">{ books[0].Title }</h3>
+      <p class="py-2">by { books[0].Author }</p>
+      <h4 class="py-4 font-bold">Breakdown of first result distribution:</h4>
+      <div>
+        <canvas id="myChart"></canvas>
+      </div>
+      }
+    </div>
+    <div class="stats mt-10 self-start shadow">
+      <div class="stat">
+        <div class="stat-title">Preference Match</div>
+        if err != nil {
+        <div class="stat-value">0%</div>
+        } else {
+        <div class="stat-value">{ fmt.Sprintf("%v%%", books[0].PreferenceMatchPercentage) }</div>
+        }
+        <div class="stat-desc">of your preferences matched this book</div>
+      </div>
+    </div>
+    <div>
+      <table class="table">
+        <!-- head -->
+        <thead>
+          <tr>
+            <th></th>
+            <th>Title</th>
+            <th>Author</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- row 1 -->
+          for index, book := range books {
+          <tr class="bg-base-200">
+            <th>{ strconv.Itoa(index+1) }</th>
+            <td>{ book.Title }</td>
+            <td>{ book.Author }</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+}
 }
 
 script loadPieChart(labels []string, data []int) {
