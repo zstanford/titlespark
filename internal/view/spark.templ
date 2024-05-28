@@ -29,7 +29,8 @@ templ SparkForm() {
   <div class="card w-96 shadow-xl">
     <div class="card-body">
       <h2 class="card-title">TitleSpark</h2>
-      <form id="sparkForm" hx-target="#spark-content" action="/spark" method="post">
+      <form id="sparkForm" hx-target="#spark-content" hx-indicator="#sparkForm-loading-indicator" action="/spark"
+        method="post">
         <div>
           <label>Language</label>
           <select id="language" name="language" class="select select-bordered w-full max-w-xs">
@@ -67,9 +68,12 @@ templ SparkForm() {
             class="input input-bordered w-full max-w-xs" />
         </div>
         <div class="card-actions justify-center">
-          <button class="btn btn-primary my-2">Get Suggestion</button>
+          <button class="btn btn-primary my-2">
+            Get Suggestion
+          </button>
         </div>
       </form>
+      <span id="sparkForm-loading-indicator" class="htmx-indicator loading loading-dots loading-lg"></span>
     </div>
   </div>
 </div>
@@ -94,18 +98,18 @@ templ SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData [
       </div>
       }
     </div>
-    <div class="stats mt-10 self-start shadow">
-      <div class="stat">
-        <div class="stat-title">Preference Match</div>
-        if err != nil {
-        <div class="stat-value">0%</div>
-        } else {
-        <div class="stat-value">{ fmt.Sprintf("%v%%", books[0].PreferenceMatchPercentage) }</div>
-        }
-        <div class="stat-desc">of your preferences matched this title</div>
+    <div class="self-start">
+      <div class="stats mt-10 shadow">
+        <div class="stat">
+          <div class="stat-title">Preference Match</div>
+          if err != nil {
+          <div class="stat-value">0%</div>
+          } else {
+          <div class="stat-value">{ fmt.Sprintf("%v%%", books[0].PreferenceMatchPercentage) }</div>
+          }
+          <div class="stat-desc">of subjects related to this title matched your preferences</div>
+        </div>
       </div>
-    </div>
-    <div>
       <table class="table">
         <!-- head -->
         <thead>

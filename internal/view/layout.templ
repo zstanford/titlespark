@@ -1,20 +1,26 @@
 package view
 
 templ Layout(title string) {
-	<!DOCTYPE html>
-	<html>
-		<head>
-			<title>{ title }</title>
-			<script src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous"></script>
-			<link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css" rel="stylesheet" type="text/css"/>
-			<script src="https://cdn.tailwindcss.com"></script>
-			<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-			<script src="https://unpkg.com/frappe-charts@1.2.4/dist/frappe-charts.min.iife.js"></script>
-		</head>
-		<body>
-			<div class="grid h-screen w-full overflow-hidden bg-gray-200">
-				{ children... }
-			</div>
-		</body>
-	</html>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{ title }</title>
+  <script src="https://unpkg.com/htmx.org@1.9.9"
+    integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX"
+    crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/frappe-charts@1.2.4/dist/frappe-charts.min.iife.js"></script>
+  <script src="https://kit.fontawesome.com/fa8f8a1558.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="grid h-screen w-full overflow-hidden bg-gray-200">
+    { children... }
+  </div>
+</body>
+
+</html>
 }

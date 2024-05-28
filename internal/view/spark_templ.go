@@ -90,7 +90,7 @@ func SparkForm() templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex min-h-screen flex-row items-center justify-center\"><div class=\"card w-96 shadow-xl\"><div class=\"card-body\"><h2 class=\"card-title\">TitleSpark</h2><form id=\"sparkForm\" hx-target=\"#spark-content\" action=\"/spark\" method=\"post\"><div><label>Language</label> <select id=\"language\" name=\"language\" class=\"select select-bordered w-full max-w-xs\"><option disabled selected>Select Language</option> <option value=\"eng\">English</option> <option value=\"spa\">Spanish</option> <option value=\"fre\">French</option> <option value=\"deu\">German</option> <option value=\"zho\">Chinese</option> <option value=\"jpn\">Japanese</option></select> <label>Genre</label> <select id=\"genre\" name=\"genre\" class=\"select select-bordered w-full max-w-xs\"><option disabled selected>Select Genre</option> <option value=\"fiction\">Fiction</option> <option value=\"nonfiction\">Non-fiction</option> <option value=\"fantasy\">Fantasy</option> <option value=\"mystery\">Mystery</option> <option value=\"romance\">Romance</option> <option value=\"science fiction\">Sci-Fi</option> <option value=\"horror\">Horror</option> <option value=\"classics\">Classics</option> <option value=\"comedy\">Comedy</option></select> <label>Target Audience</label> <select id=\"target-audience\" name=\"target-audience\" class=\"select select-bordered w-full max-w-xs\"><option disabled selected>Select Target Audience</option> <option value=\"adult\">Adult</option> <option value=\"young adult\">Young Adult</option> <option value=\"juvenile\">Youth</option> <option value=\"children\">Children</option></select> <label>Topic or Subject</label> <input type=\"text\" name=\"subject\" id=\"subject\" placeholder=\"e.g. dogs and cats...\" class=\"input input-bordered w-full max-w-xs\"></div><div class=\"card-actions justify-center\"><button class=\"btn btn-primary my-2\">Get Suggestion</button></div></form></div></div></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex min-h-screen flex-row items-center justify-center\"><div class=\"card w-96 shadow-xl\"><div class=\"card-body\"><h2 class=\"card-title\">TitleSpark</h2><form id=\"sparkForm\" hx-target=\"#spark-content\" hx-indicator=\"#sparkForm-loading-indicator\" action=\"/spark\" method=\"post\"><div><label>Language</label> <select id=\"language\" name=\"language\" class=\"select select-bordered w-full max-w-xs\"><option disabled selected>Select Language</option> <option value=\"eng\">English</option> <option value=\"spa\">Spanish</option> <option value=\"fre\">French</option> <option value=\"deu\">German</option> <option value=\"zho\">Chinese</option> <option value=\"jpn\">Japanese</option></select> <label>Genre</label> <select id=\"genre\" name=\"genre\" class=\"select select-bordered w-full max-w-xs\"><option disabled selected>Select Genre</option> <option value=\"fiction\">Fiction</option> <option value=\"nonfiction\">Non-fiction</option> <option value=\"fantasy\">Fantasy</option> <option value=\"mystery\">Mystery</option> <option value=\"romance\">Romance</option> <option value=\"science fiction\">Sci-Fi</option> <option value=\"horror\">Horror</option> <option value=\"classics\">Classics</option> <option value=\"comedy\">Comedy</option></select> <label>Target Audience</label> <select id=\"target-audience\" name=\"target-audience\" class=\"select select-bordered w-full max-w-xs\"><option disabled selected>Select Target Audience</option> <option value=\"adult\">Adult</option> <option value=\"young adult\">Young Adult</option> <option value=\"juvenile\">Youth</option> <option value=\"children\">Children</option></select> <label>Topic or Subject</label> <input type=\"text\" name=\"subject\" id=\"subject\" placeholder=\"e.g. dogs and cats...\" class=\"input input-bordered w-full max-w-xs\"></div><div class=\"card-actions justify-center\"><button class=\"btn btn-primary my-2\">Get Suggestion</button></div></form><span id=\"sparkForm-loading-indicator\" class=\"htmx-indicator loading loading-dots loading-lg\"></span></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -154,7 +154,7 @@ func SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []
 				var templ_7745c5c3_Var9 string
 				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("Error: %s", err))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 85, Col: 40}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 89, Col: 40}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 				if templ_7745c5c3_Err != nil {
@@ -172,7 +172,7 @@ func SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []
 				var templ_7745c5c3_Var10 string
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(books[0].Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 89, Col: 53}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 93, Col: 53}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 				if templ_7745c5c3_Err != nil {
@@ -185,7 +185,7 @@ func SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []
 				var templ_7745c5c3_Var11 string
 				templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(books[0].Author)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 90, Col: 42}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 94, Col: 42}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 				if templ_7745c5c3_Err != nil {
@@ -196,7 +196,7 @@ func SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><div class=\"stats mt-10 self-start shadow\"><div class=\"stat\"><div class=\"stat-title\">Preference Match</div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><div class=\"self-start\"><div class=\"stats mt-10 shadow\"><div class=\"stat\"><div class=\"stat-title\">Preference Match</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -213,7 +213,7 @@ func SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []
 				var templ_7745c5c3_Var12 string
 				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%v%%", books[0].PreferenceMatchPercentage))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 103, Col: 89}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 108, Col: 91}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 				if templ_7745c5c3_Err != nil {
@@ -224,7 +224,7 @@ func SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"stat-desc\">of your preferences matched this title</div></div></div><div><table class=\"table\"><!-- head --><thead><tr><th></th><th>Title</th><th>Author</th></tr></thead> <tbody><!-- row 1 -->")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"stat-desc\">of subjects related to this title matched your preferences</div></div></div><table class=\"table\"><!-- head --><thead><tr><th></th><th>Title</th><th>Author</th></tr></thead> <tbody><!-- row 1 -->")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -236,7 +236,7 @@ func SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []
 				var templ_7745c5c3_Var13 string
 				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(index + 1))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 122, Col: 39}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 126, Col: 39}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 				if templ_7745c5c3_Err != nil {
@@ -249,7 +249,7 @@ func SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []
 				var templ_7745c5c3_Var14 string
 				templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(book.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 123, Col: 28}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 127, Col: 28}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 				if templ_7745c5c3_Err != nil {
@@ -262,7 +262,7 @@ func SparkResult(books []app.BookSpark, pieChartLabels []string, pieChartData []
 				var templ_7745c5c3_Var15 string
 				templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(book.Author)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 124, Col: 29}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/spark.templ`, Line: 128, Col: 29}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 				if templ_7745c5c3_Err != nil {

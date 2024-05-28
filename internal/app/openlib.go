@@ -154,9 +154,13 @@ func (s *OpenLibServiceOp) GetBooks(bookDocs []BookDocs) ([]Book, error) {
 		if !exists {
 			return []Book{}, fmt.Errorf("subjects not found for ISBN: %s", isbn)
 		}
+		authorName := ""
+		if len(book.Authors) > 0 {
+			authorName = book.Authors[0].Name
+		}
 		b := Book{
 			Title:    book.Title,
-			Author:   book.Authors[0].Name,
+			Author:   authorName,
 			Subjects: subjects,
 		}
 		books = append(books, b)
